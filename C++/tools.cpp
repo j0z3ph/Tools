@@ -35,118 +35,133 @@
 
 using namespace std;
 
-void limpiarBuffer()
+namespace tools
 {
-    while (getchar() != '\n')
-        ;
-}
 
-void pausa()
-{
-    cout << "\nPresione ENTER para continuar...";
-    while (getchar() != '\n')
-        ;
-}
-
-/**
- * @brief Moves cursor to desired coordinates.
- *
- * @param x X coordinate (column)
- * @param y Y coordinate (row)
- */
-void gotoXY(int x, int y)
-{
-#ifdef _WIN32
-    HANDLE hcon;
-    hcon = GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD dwPos;
-    dwPos.X = x - 1;
-    dwPos.Y = y - 1;
-    SetConsoleCursorPosition(hcon, dwPos);
-#else
-    printf("%c[%d;%df", 0x1B, y, x);
-#endif
-}
-
-/**
- * @brief Clears command window
- *
- */
-void clear()
-{
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
-
-/**
- * @brief Prints the given menu.
- * User can interact with menu using Up/Down arrows
- * and can select an option pressing the ENTER key.
- *
- * @param numItems Number of items in the string array.
- * @param items String array. Each item is a menu option.
- * @param title Menu title
- * @return int 0-base index of the selected item.
- */
-int showMenu(vector<string> items, const string title)
-{
-    int opt = -1, mark = 0, cur_pos = 23;
-    char c;
-    clear();
-    // Title
-    cout << title << endl;
-    // Items
-    for (int i = 0; i < items.size(); i++)
+    void limpiarBuffer()
     {
-        cout << " " << (mark == i ? ">> " : "   ") << i + 1 << ". " << items[i] << endl;
+        while (getchar() != '\n');
     }
-    cout << "Seleccione una opcion ";
-#ifndef _WIN32
-    system("stty raw");
+
+    void pausa()
+    {
+        cout << "\nPresione ENTER para continuar...";
+#ifdef _WIN32
+        while (getch() != ENTER)
+            ;
+#else
+        system("stty raw");
+        while (getc(stdin) != ENTER);
+        system("stty cooked");
 #endif
-    while (opt == -1)
+    }
+
+    /**
+     * @brief Moves cursor to desired coordinates.
+     *
+     * @param x X coordinate (column)
+     * @param y Y coordinate (row)
+     */
+    void gotoXY(int x, int y)
     {
 #ifdef _WIN32
-        c = getch();
-        if (c == 0)
+        HANDLE hcon;
+        hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+        COORD dwPos;
+        dwPos.X = x - 1;
+        dwPos.Y = y - 1;
+        SetConsoleCursorPosition(hcon, dwPos);
+#else
+        cout << "\e[" << y << ";" << x << "H";
+#endif
+    }
+
+    /**
+     * @brief Clears command window
+     *
+     */
+    void clear()
+    {
+        cout << "\e[1;1H\e[2J";
+    }
+
+    /**
+     * @brief Limpia la pantalla.
+     *
+     */
+    void limpiarPantalla()
+    {
+        clear();
+    }
+
+    /**
+     * @brief Prints the given menu.
+     * User can interact with menu using Up/Down arrows
+     * and can select an option pressing the ENTER key.
+     *
+     * @param numItems Number of items in the string array.
+     * @param items String array. Each item is a menu option.
+     * @param title Menu title
+     * @return int 0-base index of the selected item.
+     */
+    int showMenu(vector<string> items, const string title)
+    {
+        int opt = -1, mark = 0, cur_pos = 23;
+        char c;
+        clear();
+        // Title
+        cout << title << endl;
+        // Items
+        for (int i = 0; i < items.size(); i++)
         {
+            cout << " " << (mark == i ? ">> " : "   ") << i + 1 << ". " << items[i] << endl;
+        }
+        cout << "Seleccione una opcion ";
+#ifndef _WIN32
+        system("stty raw");
+#endif
+        while (opt == -1)
+        {
+#ifdef _WIN32
             c = getch();
-        }
+            if (c == 0)
+            {
+                c = getch();
+            }
 #else
-        c = getc(stdin);
+            c = getc(stdin);
 #endif
-        if (c == ENTER)
-        {
-            // Enter
-            opt = mark;
+            if (c == ENTER)
+            {
+                // Enter
+                opt = mark;
+            }
+            if (c == UP)
+            {
+                // Up arrow
+                gotoXY(2, mark + 2);
+                cout << "  ";
+                mark = (mark + 1) < items.size() ? mark + 1 : 0;
+                gotoXY(2, mark + 2);
+                cout << ">>";
+                gotoXY(cur_pos, items.size() + 2);
+            }
+            if (c == DOWN)
+            {
+                // Down arrow
+                gotoXY(2, mark + 2);
+                cout << "  ";
+                mark = (mark - 1) >= 0 ? mark - 1 : items.size() - 1;
+                gotoXY(2, mark + 2);
+                cout << ">>";
+                gotoXY(cur_pos, items.size() + 2);
+            }
         }
-        if (c == UP)
-        {
-            // Up arrow
-            gotoXY(2, mark + 2);
-            cout << "  ";
-            mark = (mark + 1) < items.size() ? mark + 1 : 0;
-            gotoXY(2, mark + 2);
-            cout << ">>";
-            gotoXY(cur_pos, items.size() + 2);
-        }
-        if (c == DOWN)
-        {
-            // Down arrow
-            gotoXY(2, mark + 2);
-            cout << "  ";
-            mark = (mark - 1) >= 0 ? mark - 1 : items.size() - 1;
-            gotoXY(2, mark + 2);
-            cout << ">>";
-            gotoXY(cur_pos, items.size() + 2);
-        }
-    }
 #ifndef _WIN32
-    system("stty cooked");
+        system("stty cooked");
 #endif
-    clear();
-    return opt;
+        clear();
+        return opt;
+    }
+
 }

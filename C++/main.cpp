@@ -14,6 +14,8 @@
 
 using namespace std;
 
+using namespace tools;
+
 int main()
 {
     vector<string> opciones;

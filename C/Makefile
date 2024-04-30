@@ -1,8 +1,14 @@
-run: main.exe
-	./main.exe
+APP=main.exe
+MAIN=main.c
+TOOLS_OBJ=tools.o
+TOOLS_H=tools.h
+TOOLS=tools.c
 
-main.exe: main.c tools.h tools.o
-	gcc main.c tools.o -o main.exe
+run: $(APP)
+	./$(APP)
 
-tools.o: tools.c
-	gcc -c tools.c -o tools.o
+$(APP): $(MAIN) $(TOOLS_H) $(TOOLS_OBJ)
+	gcc $(MAIN) $(TOOLS_OBJ) -o $(APP)
+
+$(TOOLS_OBJ): $(TOOLS)
+	gcc -c $(TOOLS) -o $(TOOLS_OBJ)

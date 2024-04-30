@@ -26,42 +26,53 @@
 
 using namespace std;
 
-/**
- * @brief Limpia el buffer despues de un cin
- *
- */
-void limpiarBuffer();
+namespace tools
+{
 
-/**
- * @brief Pausa la ejecucion del programa
- *
- */
-void pausa();
+    /**
+     * @brief Limpia el buffer despues de un cin
+     *
+     */
+    void limpiarBuffer();
 
-/**
- * @brief Moves cursor to desired coordinates.
- *
- * @param x X coordinate (column).
- * @param y Y coordinate (row).
- */
-void gotoXY(int x, int y);
+    /**
+     * @brief Pausa la ejecucion del programa
+     *
+     */
+    void pausa();
 
-/**
- * @brief Clears command window.
- *
- */
-void clear();
+    /**
+     * @brief Moves cursor to desired coordinates.
+     *
+     * @param x X coordinate (column).
+     * @param y Y coordinate (row).
+     */
+    void gotoXY(int x, int y);
 
-/**
- * @brief Prints the given menu.
- * User can interact with menu using Up/Down arrows
- * and can select an option pressing the ENTER key.
- *
- * @param numItems Number of items in the string array.
- * @param items String array. Each item is a menu option.
- * @param title Menu title.
- * @return int 0-base index of the selected item.
- */
-int showMenu(vector<string> items, const string title);
+    /**
+     * @brief Clears command window.
+     *
+     */
+    void clear();
+
+    /**
+     * @brief Limpia la pantalla.
+     *
+     */
+    void limpiarPantalla();
+
+    /**
+     * @brief Prints the given menu.
+     * User can interact with menu using Up/Down arrows
+     * and can select an option pressing the ENTER key.
+     *
+     * @param numItems Number of items in the string array.
+     * @param items String array. Each item is a menu option.
+     * @param title Menu title.
+     * @return int 0-base index of the selected item.
+     */
+    int showMenu(vector<string> items, const string title);
+
+}
 
 #endif

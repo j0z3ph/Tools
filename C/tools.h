@@ -22,7 +22,7 @@
 #define __TOOLS_H__
 
 /**
- * @brief Limpia el bueffer de entrada
+ * @brief Limpia el buffer de entrada
  * 
  */
 void limpiaBuffer();
@@ -47,6 +47,12 @@ void gotoXY(int x, int y);
  * 
  */
 void clear();
+
+/**
+ * @brief Limpia la ventana de comandos
+ * 
+ */
+void limpiarPantalla();
 
 /**
  * @brief Prints the given menu. 
